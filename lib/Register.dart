@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,9 @@ class _RegisterState extends State<Register> {
     var user = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email.text, password: pass.text);
 
+    final DocumentReference reg =
+        FirebaseFirestore.instance.collection('Register').doc(user.user?.uid);
+
     if (user.user == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Registration Failed"),
@@ -26,6 +30,19 @@ class _RegisterState extends State<Register> {
       ));
       Navigator.pushNamed(context, '/login');
     }
+
+    var reslt = await reg.get();
+    if (reslt.exists) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('User aldready exist,Please login!')));
+    }
+
+    final data = {
+      'email': email.text,
+      'password': pass.text,
+      'uid': user.user?.uid,
+    };
+    reg.set(data);
   }
 
   @override

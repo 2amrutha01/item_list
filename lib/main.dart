@@ -4,6 +4,7 @@ import 'package:my_app/Login.dart';
 import 'package:my_app/Register.dart';
 import 'package:my_app/firebase_options.dart';
 import 'package:my_app/home.dart';
+import 'package:my_app/items.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
         '/register': (context) => Register(),
       },
       title: "MY app",
-      home: Login(),
+      home: Reg(),
     );
   }
 }

@@ -21,13 +21,23 @@ class _homeState extends State<home> {
   }
 
   Future<void> getitems() async {
-    final response =
-        await http.get(Uri.parse("https://fakestoreapi.com/products/ "));
-    final responseData = json.decode(response.body);
-    if (response.statusCode == 200) {
-      setState(() {
-        items = responseData;
-      });
+    try {
+      final response =
+          await http.get(Uri.parse("https://fakestoreapi.com/products/"));
+      final responseData = json.decode(response.body);
+      if (response.statusCode == 200) {
+        setState(() {
+          items = responseData;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Invalid Credentials.")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
     }
   }
 
@@ -36,10 +46,17 @@ class _homeState extends State<home> {
     return Scaffold(
         body: ListView.builder(
             itemCount: items.length,
-            itemBuilder: (context, index) {
+            itemBuilder: (BuildContext context, index) {
               final item = items[index];
               return Column(
-                children: [Text(item['id']), Text(item['title'])],
+                children: [
+                  Image.network(item['image']),
+                  Text('${item['id']}'),
+                  Text(item['title']),
+                  Text('${item['price']}'),
+                  Text(item['description']),
+                  Text(item['category']),
+                ],
               );
             }));
   }

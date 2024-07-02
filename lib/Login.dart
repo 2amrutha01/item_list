@@ -12,18 +12,23 @@ class _LoginState extends State<Login> {
   TextEditingController email = TextEditingController();
   TextEditingController pass = TextEditingController();
   void submit(BuildContext context) async {
-    var user = await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: email.text, password: pass.text);
+    try {
+      var user = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email.text, password: pass.text);
 
-    if (user.user == null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Login Failed"),
-      ));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Login Successful"),
-      ));
-      Navigator.pushNamed(context, '/home');
+      if (user.user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Login Failed"),
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Login Successful"),
+        ));
+        Navigator.pushNamed(context, '/home');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
 
